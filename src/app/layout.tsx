@@ -4,11 +4,15 @@ import {
   Poppins,
   Dancing_Script,
   Kantumruy_Pro,
-  Moul, Geist } from "next/font/google";
+  Geist,
+} from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ 
+  subsets: ["latin"], 
+  variable: "--font-sans" 
+});
 
 const playfair = Playfair_Display({ 
   subsets: ["latin"], 
@@ -42,9 +46,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
+    <html 
+      lang="en" 
+      data-scroll-behavior="smooth"
+      className={cn(
+        geist.variable,
+        playfair.variable,
+        poppins.variable,
+        dancing.variable,
+        khmer.variable
+      )}
+    >
       <body
-        className={`${playfair.variable} ${poppins.variable} ${dancing.variable} ${khmer.variable} bg-[#FFFDF9] font-sans text-neutral-900 antialiased`}
+        className="bg-[#FFFDF9] font-sans text-neutral-900 antialiased"
       >
         {children}
       </body>
