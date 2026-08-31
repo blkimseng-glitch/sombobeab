@@ -128,3 +128,13 @@
     @apply font-sans;
   }
 }
+
+@theme inline {
+  --font-sans: var(--font-noto-khmer);
+  --font-mono: var(--font-geist-mono);
+}
+
+html,
+body {
+  font-family: var(--font-noto-khmer), sans-serif;
+}
