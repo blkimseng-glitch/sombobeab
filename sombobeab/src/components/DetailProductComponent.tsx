@@ -1,15 +1,10 @@
 "use client";
 
-import {
-  CircleCheck,
-  CircleX,
-  Clock3,
-  Flame,
-  ShoppingBag,
-} from "lucide-react";
+import { CircleCheck, CircleX, Clock3, Flame, ShoppingBag } from "lucide-react";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -116,29 +111,26 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="mb-8 text-sm text-muted-foreground">
-          Menu
-          <span className="mx-2">/</span>
-          <span className="font-medium text-foreground">
-            {product.name}
-          </span>
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="mb-8 text-sm text-muted-foreground">
+            <Link href="/foods" className="hover:underline">
+              Menu
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="font-medium text-foreground">{product.name}</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 xl:gap-20">
           <div className="space-y-8">
-            <ProductImages
-              image={product.image_url}
-              name={product.name}
-            />
+            <ProductImages image={product.image_url} name={product.name} />
 
             {(product.protein != null ||
               product.carbs != null ||
               product.fat != null) && (
               <div className="border-t pt-7">
                 <div className="mb-4">
-                  <h2 className="text-xl font-bold">
-                    Nutrition
-                  </h2>
+                  <h2 className="text-xl font-bold">Nutrition</h2>
 
                   <p className="mt-1 text-sm text-muted-foreground">
                     Nutritional information per serving
@@ -154,17 +146,11 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
                   )}
 
                   {product.carbs != null && (
-                    <NutritionItem
-                      label="Carbs"
-                      value={`${product.carbs}g`}
-                    />
+                    <NutritionItem label="Carbs" value={`${product.carbs}g`} />
                   )}
 
                   {product.fat != null && (
-                    <NutritionItem
-                      label="Fat"
-                      value={`${product.fat}g`}
-                    />
+                    <NutritionItem label="Fat" value={`${product.fat}g`} />
                   )}
                 </div>
               </div>
@@ -200,10 +186,7 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
                 )}
 
                 {product.category && (
-                  <Badge
-                    variant="outline"
-                    className="rounded-full px-3 py-1.5"
-                  >
+                  <Badge variant="outline" className="rounded-full px-3 py-1.5">
                     {product.category}
                   </Badge>
                 )}
@@ -289,31 +272,28 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
               )}
             </div>
 
-            {product.ingredients &&
-              product.ingredients.length > 0 && (
-                <div className="border-t pt-7">
-                  <div className="mb-4">
-                    <h2 className="text-xl font-bold">
-                      Ingredients
-                    </h2>
+            {product.ingredients && product.ingredients.length > 0 && (
+              <div className="border-t pt-7">
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold">Ingredients</h2>
 
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      What's inside this dish
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {product.ingredients.map((ingredient, index) => (
-                      <span
-                        key={`${ingredient}-${index}`}
-                        className="rounded-full border bg-muted/40 px-3 py-2 text-sm font-medium"
-                      >
-                        {ingredient}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    What's inside this dish
+                  </p>
                 </div>
-              )}
+
+                <div className="flex flex-wrap gap-2">
+                  {product.ingredients.map((ingredient, index) => (
+                    <span
+                      key={`${ingredient}-${index}`}
+                      className="rounded-full border bg-muted/40 px-3 py-2 text-sm font-medium"
+                    >
+                      {ingredient}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {details.length > 0 && (
               <div className="border-t pt-7">
@@ -327,13 +307,7 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
   );
 };
 
-const NutritionItem = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) => {
+const NutritionItem = ({ label, value }: { label: string; value: string }) => {
   return (
     <div className="rounded-2xl border bg-card p-4 text-center">
       <p className="text-lg font-bold">{value}</p>
@@ -353,9 +327,7 @@ const ProductInfo = ({ info }: ProductInfoProps) => {
   return (
     <div>
       <div className="mb-4">
-        <h2 className="text-xl font-bold">
-          Details
-        </h2>
+        <h2 className="text-xl font-bold">Details</h2>
 
         <p className="mt-1 text-sm text-muted-foreground">
           More information about this item
@@ -368,16 +340,14 @@ const ProductInfo = ({ info }: ProductInfoProps) => {
             key={`product-detail-info-${index}`}
             className={cn(
               "flex items-center justify-between gap-6 px-4 py-4 sm:px-5",
-              index !== info.length - 1 && "border-b"
+              index !== info.length - 1 && "border-b",
             )}
           >
             <dt className="text-sm font-medium text-muted-foreground">
               {item.label}
             </dt>
 
-            <dd className="text-right text-sm font-semibold">
-              {item.value}
-            </dd>
+            <dd className="text-right text-sm font-semibold">{item.value}</dd>
           </div>
         ))}
       </dl>
@@ -385,10 +355,7 @@ const ProductInfo = ({ info }: ProductInfoProps) => {
   );
 };
 
-const ProductImages = ({
-  image,
-  name,
-}: ProductImagesProps) => {
+const ProductImages = ({ image, name }: ProductImagesProps) => {
   return (
     <div className="group relative">
       <Carousel
@@ -420,7 +387,7 @@ const ProductImages = ({
             className={cn(
               "static translate-y-0",
               "border-white/30 bg-black/40 text-white",
-              "backdrop-blur-md hover:bg-black/60"
+              "backdrop-blur-md hover:bg-black/60",
             )}
           />
 
@@ -428,7 +395,7 @@ const ProductImages = ({
             className={cn(
               "static translate-y-0",
               "border-white/30 bg-black/40 text-white",
-              "backdrop-blur-md hover:bg-black/60"
+              "backdrop-blur-md hover:bg-black/60",
             )}
           />
         </div>

@@ -12,15 +12,15 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-black/5 bg-cream/90 backdrop-blur">
       <nav className="container-x flex h-20 items-center justify-between">
-        {/* ប្តូរអក្សរ Foodeza ទៅជាផ្ទាំងរូបភាព */}
+      
         <Link href="/" className="flex items-center gap-2">
-          {/* កែតម្រូវ src, width, និង height តាមរូបភាពជាក់ស្តែងរបស់អ្នក */}
+
           <Image
-            src="/img/sombobeab.png" // ផ្លូវទៅកាន់រូបភាពក្នុង public folder
+            src="/img/sombobeab.png"
             alt="Foodeza Logo"
-            width={250} // ទទឹងរូបភាព (គិតជា pixel)
-            height={70}  // កម្ពស់រូបភាព (គិតជា pixel)
-            className="h-10 w-20 object-contain" // កំណត់កម្ពស់ថេរក្នុង CSS ដើម្បីឱ្យសមស្របនឹង Navbar
+            width={250} 
+            height={70} 
+            className="h-10 w-20 object-contain" 
             priority 
           />
         </Link>

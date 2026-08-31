@@ -33,7 +33,7 @@ export default function About() {
               Jelu គឺជាអាហារដ្ឋានព្រឹកប្រចាំតំបន់ ដែលបង្កើតឡើងក្រោមគំនិតមួយ៖ «អាហារគួរតែមានរសជាតិដើម ស្រស់ៗចេញពីប្រភពដើម»។ គ្រប់មុខម្ហូបនៅលើចាន ត្រូវបានរៀបចំធ្វើឡើងយ៉ាងស្រស់ៗនៅព្រឹកនោះតែម្តង ចាប់តាំងពីនំប៉័ង sourdough រហូតដល់គ្រឿងផ្សំផ្សេងៗទៀត។
             </p>
             <a
-              href="#menu"
+              href="//foodss"
               className="inline-flex items-center gap-2 bg-[#4d6a3a] hover:bg-[#33472a] text-white font-medium px-6 py-3 rounded-full transition-colors"
             >
               មើលម៉ឺនុយពេញលេញ

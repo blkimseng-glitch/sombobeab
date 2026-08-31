@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const collage = [
   {
@@ -65,12 +66,15 @@ export default function About() {
             ដើម្បីឱ្យបានតុល្យភាពរវាងរសជាតិ និងអាហារូបត្ថម្ភ។
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <a href="#menu" className="btn-primary">
+            
+            <Link href="/foods" className="btn-primary">
               អានបន្ថែម <ArrowRight size={16} />
-            </a>
-            <a href="#about" className="btn-outline">
+            </Link>
+
+        
+            <Link href="/about" className="btn-outline">
               រឿងរ៉ាវរបស់យើង
-            </a>
+            </Link>
           </div>
         </div>
       </div>

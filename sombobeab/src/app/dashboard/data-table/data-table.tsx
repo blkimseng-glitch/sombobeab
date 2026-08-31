@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
   ColumnFiltersState,
   SortingState,
@@ -8,7 +9,7 @@ import {
   type ColumnDef,
   type RowData,
 } from "@tanstack/react-table";
-import { Search, LayoutGrid, Filter, ChevronDown } from "lucide-react";
+import { Search, LayoutGrid, Filter, ChevronDown, PackageOpen } from "lucide-react";
 
 import {
   Table,
@@ -18,10 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { features, type DataTableFeatures } from "./data-table-features";
-import { Button } from "@/components/ui/button";
-import React from "react";
 import { Input } from "@base-ui/react";
 import {
   DropdownMenu,
@@ -30,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { PackageOpen } from "lucide-react";
+import { features, type DataTableFeatures } from "./data-table-features";
 import { getCategoryStyle } from "@/lib/category-style";
 import { FoodMenuHeader } from "./food-menu-header";
 import { TablePagination } from "./table-pagination";
@@ -47,11 +44,8 @@ export function DataTable<TData extends RowData>({
   onAddNew,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<ColumnVisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
@@ -81,7 +75,11 @@ export function DataTable<TData extends RowData>({
   const allCategoryNames = React.useMemo(() => {
     const names = new Set<string>();
     data.forEach((row: any) => {
-      if (row?.category?.name) names.add(row.category.name);
+      if (typeof row?.category === "string") {
+        names.add(row.category);
+      } else if (row?.category?.name) {
+        names.add(row.category.name);
+      }
     });
     return [...names].sort();
   }, [data]);
@@ -99,40 +97,44 @@ export function DataTable<TData extends RowData>({
   const totalCount = table.getFilteredRowModel().rows.length;
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
+    <div className="space-y-5 bg-slate-50/50 p-6 rounded-3xl border border-slate-200/60 shadow-xs">
+      {/* Page Header */}
       <FoodMenuHeader itemCount={totalCount} onAddNew={onAddNew} />
 
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="relative w-full max-w-sm">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-2xs">
+        {/* Search Input */}
+        <div className="relative w-full sm:w-80">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input
-            placeholder="Filter by title..."
+            placeholder="ស្វែងរកតាមឈ្មោះ..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            className="h-10 w-full rounded-lg border border-input bg-transparent pl-9 pr-3 text-sm shadow-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 text-sm font-medium text-slate-800 transition-all outline-none placeholder:text-slate-400 focus:border-slate-400 focus:bg-white focus:ring-2 focus:ring-violet-500/10"
           />
         </div>
 
+        {/* Action Dropdowns */}
         <div className="ml-auto flex items-center gap-2">
+          {/* Columns Visibility Dropdown */}
           <DropdownMenu>
-            <DropdownMenuTrigger
-              render={<Button variant="outline" className="gap-2" />}
-            >
-              <LayoutGrid className="h-4 w-4" />
+            <DropdownMenuTrigger className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50">
+              <LayoutGrid className="h-4 w-4 text-slate-500" />
               Columns
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent
+              align="end"
+              className="z-50 w-48 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl"
+            >
               {table
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
                 .map((column) => (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
+                    className="capitalize cursor-pointer rounded-lg py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) =>
                       column.toggleVisibility(!!value)
@@ -144,34 +146,37 @@ export function DataTable<TData extends RowData>({
             </DropdownMenuContent>
           </DropdownMenu>
 
+          {/* Category Filter Dropdown */}
           <DropdownMenu>
-            <DropdownMenuTrigger
-              render={<Button variant="outline" className="gap-2" />}
-            >
-              <Filter className="h-4 w-4" />
-              Filter
+            <DropdownMenuTrigger className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50">
+              <Filter className="h-4 w-4 text-slate-500" />
+              តម្រង (Filter)
               {activeCategoryFilter.length > 0 && (
-                <span className="rounded-full bg-violet-600 px-1.5 py-0.5 text-[10px] font-medium text-white">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-600 text-[10px] font-bold text-white">
                   {activeCategoryFilter.length}
                 </span>
               )}
-              <ChevronDown className="h-3.5 w-3.5" />
+              <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent
+              align="end"
+              className="z-50 w-56 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl"
+            >
               {allCategoryNames.length === 0 ? (
-                <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                  No categories
+                <div className="px-2 py-3 text-center text-xs text-slate-400">
+                  មិនមានប្រភេទទេ
                 </div>
               ) : (
                 allCategoryNames.map((name) => (
                   <DropdownMenuCheckboxItem
                     key={name}
+                    className="cursor-pointer rounded-lg py-1.5"
                     checked={activeCategoryFilter.includes(name)}
                     onCheckedChange={() => toggleCategory(name)}
                   >
                     <span
-                      className={`mr-2 rounded px-1.5 py-0.5 text-xs ${getCategoryStyle(
-                        name,
+                      className={`mr-2 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getCategoryStyle(
+                        name
                       )}`}
                     >
                       {name}
@@ -184,17 +189,17 @@ export function DataTable<TData extends RowData>({
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-hidden rounded-lg border border-border">
-        <div className="max-h-[70vh] overflow-auto">
+      {/* Main Table Wrapper */}
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+        <div className="max-h-[68vh] overflow-auto">
           <Table>
-            <TableHeader className="sticky top-0 z-10 bg-background">
+            <TableHeader className="sticky top-0 z-20 bg-slate-100/80 backdrop-blur-md border-b border-slate-200">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="hover:bg-transparent">
+                <TableRow key={headerGroup.id} className="hover:bg-transparent border-none">
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="h-11 bg-muted/50 text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                      className="h-11 px-4 text-left align-middle font-bold text-slate-700"
                     >
                       {header.isPlaceholder ? null : (
                         <table.FlexRender header={header} />
@@ -204,16 +209,17 @@ export function DataTable<TData extends RowData>({
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody>
+
+            <TableBody className="divide-y divide-slate-100">
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="transition-colors hover:bg-muted/40 data-[state=true]:bg-muted/60"
+                    className="transition-colors hover:bg-slate-50 data-[state=true]:bg-violet-50/70"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-2.5">
+                      <TableCell key={cell.id} className="px-4 py-3.5 align-middle">
                         <table.FlexRender cell={cell} />
                       </TableCell>
                     ))}
@@ -221,10 +227,12 @@ export function DataTable<TData extends RowData>({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-48">
-                    <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-                      <PackageOpen className="h-8 w-8" />
-                      <p className="text-sm">No products match your filter.</p>
+                  <TableCell colSpan={columns.length} className="h-56 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2 text-slate-400">
+                      <PackageOpen className="h-10 w-10 opacity-40" />
+                      <p className="text-sm font-medium text-slate-500">
+                        មិនមានទិន្នន័យស្របតាមការស្វែងរកឡើយ។
+                      </p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -233,18 +241,20 @@ export function DataTable<TData extends RowData>({
           </Table>
         </div>
 
-        {/* Pagination */}
-        <TablePagination
-          pageIndex={table.state.pagination?.pageIndex ?? 0}
-          pageCount={table.getPageCount()}
-          pageSize={table.state.pagination?.pageSize ?? 6}
-          totalRows={totalCount}
-          canPreviousPage={table.getCanPreviousPage()}
-          canNextPage={table.getCanNextPage()}
-          onPageChange={(index: number) => table.setPageIndex(index)}
-          onPreviousPage={() => table.previousPage()}
-          onNextPage={() => table.nextPage()}
-        />
+        {/* Table Pagination */}
+        <div className="border-t border-slate-100 bg-slate-50/50 p-2.5">
+          <TablePagination
+            pageIndex={table.state.pagination?.pageIndex ?? 0}
+            pageCount={table.getPageCount()}
+            pageSize={table.state.pagination?.pageSize ?? 6}
+            totalRows={totalCount}
+            canPreviousPage={table.getCanPreviousPage()}
+            canNextPage={table.getCanNextPage()}
+            onPageChange={(index: number) => table.setPageIndex(index)}
+            onPreviousPage={() => table.previousPage()}
+            onNextPage={() => table.nextPage()}
+          />
+        </div>
       </div>
     </div>
   );
